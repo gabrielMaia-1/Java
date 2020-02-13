@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import chess.ChessPiece;
 import chess.ChessPosition;
+import chess.Color;
 
 public class UI {
 	
@@ -27,6 +28,10 @@ public class UI {
 	public static final String ANSI_CYAN_BACKGROUND = "\u001B[46m";
 	public static final String ANSI_WHITE_BACKGROUND = "\u001B[47m";
 	
+	public static void clearScreen() {
+		System.out.print("\033[\033[2J");
+		System.out.flush();
+	}
 	
 	public static void printBoard(ChessPiece[][] chessPiece) {
 		for (int i = 0; i < chessPiece.length; i++) {
@@ -44,11 +49,11 @@ public class UI {
 			System.out.print("-");
 		}
 		else {
-			System.out.print(piece);
-			//if(piece.getColor() == Color.RED)
-				//System.out.print(ANSI_RED + piece + ANSI_RESET);
-			//else
-				//System.out.print(ANSI_BLUE + piece + ANSI_RESET);
+			//System.out.print(piece);
+			if(piece.getColor() == Color.RED)
+				System.out.print(ANSI_RED + piece + ANSI_RESET);
+			else
+				System.out.print(ANSI_BLUE + piece + ANSI_RESET);
 		}
 		System.out.print(" ");
 	}
