@@ -1,8 +1,13 @@
 package aplication;
 
+import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.List;
 
+import chess.ChessMatch;
 import chess.ChessPiece;
 import chess.ChessPosition;
 import chess.Color;
@@ -86,4 +91,41 @@ public class UI {
 		}
 	}
 	
+	public static void printMatch(ChessMatch chessMatch, List<ChessPiece> capturedList) {
+		printBoard(chessMatch.getPieces());
+		System.out.println("\nTurn: ");
+		System.out.print(chessMatch.getTurn() + "\n");
+		
+		if(!capturedList.isEmpty())
+			printCapturedPieces(capturedList);
+		
+		System.out.println("\nPlayer: ");
+		System.out.print(chessMatch.getCurrentPlayer() + "\n");		
+	}
+
+	private static void printCapturedPieces(List<ChessPiece> capturedlist) {
+		List<ChessPiece> reds = capturedlist.stream().filter(x -> x.getColor() == Color.RED).collect(Collectors.toList());
+		List<ChessPiece> blues = capturedlist.stream().filter(x -> x.getColor() == Color.BLUE).collect(Collectors.toList());
+		
+		if(!reds.isEmpty()) {
+			System.out.println("Captured Pieces");
+			System.out.print("RED [");
+			System.out.print(Arrays.toString(reds.toArray()));
+			System.out.println("]");
+		}
+		
+		if(!blues.isEmpty()) {
+			System.out.print("BLUE [");
+			System.out.print(Arrays.toString(blues.toArray()));
+			System.out.println("]");
+		}
+	}
+	
 }
+
+
+
+
+
+
+
