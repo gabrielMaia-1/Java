@@ -3,8 +3,10 @@ package aplication;
 import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Scanner;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
+
+import boardgame.Piece;
+
 import java.util.List;
 
 import chess.ChessMatch;
@@ -99,13 +101,16 @@ public class UI {
 		if(!capturedList.isEmpty())
 			printCapturedPieces(capturedList);
 		
+		if(chessMatch.getCheck())
+			System.out.println("CHECK!");
+		
 		System.out.println("\nPlayer: ");
 		System.out.print(chessMatch.getCurrentPlayer() + "\n");		
 	}
 
 	private static void printCapturedPieces(List<ChessPiece> capturedlist) {
-		List<ChessPiece> reds = capturedlist.stream().filter(x -> x.getColor() == Color.RED).collect(Collectors.toList());
-		List<ChessPiece> blues = capturedlist.stream().filter(x -> x.getColor() == Color.BLUE).collect(Collectors.toList());
+		List<Piece> reds = (capturedlist.stream().filter(x -> x.getColor() == Color.RED).collect(Collectors.toList()));
+		List<Piece> blues = (capturedlist.stream().filter(x -> x.getColor() == Color.BLUE).collect(Collectors.toList()));
 		
 		if(!reds.isEmpty()) {
 			System.out.println("Captured Pieces");

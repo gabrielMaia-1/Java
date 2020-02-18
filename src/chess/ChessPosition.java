@@ -7,8 +7,9 @@ public class ChessPosition {
 	private char column;
 	
 	public ChessPosition( char column, int row) {
-		if(column < 'a' || column > 'h' || row < 0 || row > 8)
+		if(column < 'a' || column > 'h' || row < 0 || row > 8) {
 			throw new ChessException("ChessPosition out of Board " + row + column);
+		}
 		this.row = row;
 		this.column = column;
 	}
@@ -22,11 +23,11 @@ public class ChessPosition {
 	}
 	
 	protected Position toPosition() {
-		return new Position(8 - row, column - 'a');
+		return new Position(8 - row,  column - 'a');
 	}
 
 	protected static ChessPosition fromPosition(Position pos) {
-		return new ChessPosition((char)('a' - pos.getColumn()), 8 - pos.getRow())	;
+		return new ChessPosition((char)(pos.getRow() + 'a'), 8 - pos.getColumn())	;
 	}
 	
 	@Override
