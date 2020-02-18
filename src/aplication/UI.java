@@ -101,11 +101,15 @@ public class UI {
 		if(!capturedList.isEmpty())
 			printCapturedPieces(capturedList);
 		
-		if(chessMatch.getCheck())
-			System.out.println("CHECK!");
-		
-		System.out.println("\nPlayer: ");
-		System.out.print(chessMatch.getCurrentPlayer() + "\n");		
+		if(!chessMatch.getCheckMate()) {
+			if(chessMatch.getCheck())
+				System.out.println("CHECK!");
+			
+			System.out.println("\nPlayer: ");
+			System.out.print(chessMatch.getCurrentPlayer() + "\n");
+		} else {
+			System.out.println("CHECK MATE!");
+		}
 	}
 
 	private static void printCapturedPieces(List<ChessPiece> capturedlist) {
