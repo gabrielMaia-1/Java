@@ -5,15 +5,15 @@ import boardgame.Position;
 import chess.ChessPiece;
 import chess.Color;
 
-public class Rook extends ChessPiece {
+public class Queen extends ChessPiece {
 
-	public Rook(Board board, Color color) {
+	public Queen(Board board, Color color) {
 		super(board, color);
 	}
 
 	@Override
 	public String toString() {
-		return "R";
+		return "Q";
 	}
 
 	@Override
@@ -23,10 +23,82 @@ public class Rook extends ChessPiece {
 		int x = this.position.getRow();
 		int y = this.position.getColumn();
 
+		// SE
+		p.setValues(x + 1, y + 1);
+		for (;;) {
+			if (!getBoard().positionExists(p)) {
+				break;
+			} else {
+				if (isThereOpponentChessPiece(p)) {
+					movMat[p.getRow()][p.getColumn()] = true;
+					break;
+				} else if (!getBoard().thereIsAPiece(p)) {
+					movMat[p.getRow()][p.getColumn()] = true;
+				} else {
+					break;
+				}
+			}
+			p.setValues(p.getRow() + 1, p.getColumn() + 1);
+		}
+
+		// NE
+		p.setValues(x - 1, y + 1);
+		for (;;) {
+			if (!getBoard().positionExists(p)) {
+				break;
+			} else {
+				if (isThereOpponentChessPiece(p)) {
+					movMat[p.getRow()][p.getColumn()] = true;
+					break;
+				} else if (!getBoard().thereIsAPiece(p)) {
+					movMat[p.getRow()][p.getColumn()] = true;
+				} else {
+					break;
+				}
+			}
+			p.setValues(p.getRow() - 1, p.getColumn() + 1);
+		}
+
+		// SW
+		p.setValues(x + 1, y - 1);
+		for (;;) {
+			if (!getBoard().positionExists(p))
+				break;
+			else {
+				if (isThereOpponentChessPiece(p)) {
+					movMat[p.getRow()][p.getColumn()] = true;
+					break;
+				} else if (!getBoard().thereIsAPiece(p)) {
+					movMat[p.getRow()][p.getColumn()] = true;
+				} else {
+					break;
+				}
+			}
+			p.setValues(p.getRow() + 1, p.getColumn() - 1);
+		}
+
+		// NW
+		p.setValues(x - 1, y - 1);
+		for (;;) {
+			if (!getBoard().positionExists(p))
+				break;
+			else {
+				if (isThereOpponentChessPiece(p)) {
+					movMat[p.getRow()][p.getColumn()] = true;
+					break;
+				} else if (!getBoard().thereIsAPiece(p)) {
+					movMat[p.getRow()][p.getColumn()] = true;
+				} else {
+					break;
+				}
+			}
+			p.setValues(p.getRow() - 1, p.getColumn() - 1);
+		}
+
 		// DOWN
 		p.setValues(x + 1, y);
 		for (;;) {
-
+			
 			if (!getBoard().positionExists(p)) {
 				break;
 			} else {
@@ -98,4 +170,5 @@ public class Rook extends ChessPiece {
 
 		return movMat;
 	}
+
 }

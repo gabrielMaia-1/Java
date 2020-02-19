@@ -7,7 +7,11 @@ import java.util.stream.Collectors;
 import boardgame.Board;
 import boardgame.Piece;
 import boardgame.Position;
+import chess.pieces.Bishop;
 import chess.pieces.King;
+import chess.pieces.Knight;
+import chess.pieces.Pawn;
+import chess.pieces.Queen;
 import chess.pieces.Rook;
 
 public class ChessMatch {
@@ -95,8 +99,10 @@ public class ChessMatch {
 	}
 	
 	private Piece makeMove(Position src, Position target) {
-		Piece p = board.removePiece(src);
+		ChessPiece p = (ChessPiece)board.removePiece(src);
 		Piece capturedPiece = board.removePiece(target);
+		p.increaseMoveCount();
+		
 		if(capturedPiece != null) {
 			_piecesOnTheBoard.remove(capturedPiece);
 			_capturedPieces.add((ChessPiece)capturedPiece);
@@ -107,8 +113,9 @@ public class ChessMatch {
 	}
 	
 	private void undoMove(Position origin, Position target, Piece captured) {
-		Piece p = board.removePiece(target);
+		ChessPiece p = (ChessPiece)board.removePiece(target);
 		board.placePiece(p, origin);
+		p.decreaseMoveCount();
 		
 		if(captured != null) {
 			board.placePiece(captured, target);
@@ -189,12 +196,31 @@ public class ChessMatch {
 	}
 	
 	private void initialSetup() {
-		placeNewPiece('h', 7, new Rook(board,Color.BLUE));
-		placeNewPiece('d', 1, new Rook(board,Color.BLUE));
-		placeNewPiece('e', 1, new King(board,Color.BLUE));
 		
-		placeNewPiece('b', 8, new Rook(board,Color.RED));
-		placeNewPiece('a', 8, new King(board,Color.RED));
+		for(char i = 'a'; i < 'i' ; i++) 
+			placeNewPiece(i, 2, new Pawn(board,Color.BLUE));
+		placeNewPiece('a', 1, new Rook(board,Color.BLUE));
+		placeNewPiece('b', 1, new Knight(board,Color.BLUE));
+		placeNewPiece('c', 1, new Bishop(board,Color.BLUE));
+		placeNewPiece('d', 1, new Queen(board,Color.BLUE));
+		placeNewPiece('e', 1, new King(board,Color.BLUE));
+		placeNewPiece('f', 1, new Bishop(board,Color.BLUE));
+		placeNewPiece('g', 1, new Knight(board,Color.BLUE));
+		placeNewPiece('h', 1, new Rook(board,Color.BLUE));
+		
+		for(char i = 'a'; i < 'i' ; i++) 
+			placeNewPiece(i, 7, new Pawn(board,Color.RED));
+		placeNewPiece('a', 8, new Rook(board,Color.RED));
+		placeNewPiece('b', 8, new Knight(board,Color.RED));
+		placeNewPiece('c', 8, new Bishop(board,Color.RED));
+		placeNewPiece('d', 8, new Queen(board,Color.RED));
+		placeNewPiece('e', 8, new King(board,Color.RED));
+		placeNewPiece('f', 8, new Bishop(board,Color.RED));
+		placeNewPiece('g', 8, new Knight(board,Color.RED));
+		placeNewPiece('h', 8, new Rook(board,Color.RED));
+		
+
+
 	}
 	
 	
