@@ -32,6 +32,13 @@ public class Main {
 				
 				chessMatch.performChessMove(source, target);
 				
+				if(chessMatch.getPromoted() != null) {
+					System.out.println("Pawn Promoted! Chose a piece to promote (Q/H/B/R):\n");
+					String type = sc.nextLine();
+					chessMatch.replacePromotedPiece(type);
+					sc.nextLine();
+				}
+				
 			} catch (ChessException e) {
 				System.out.println(e.getMessage());
 				sc.nextLine();

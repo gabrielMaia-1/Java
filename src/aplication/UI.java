@@ -118,15 +118,13 @@ public class UI {
 		
 		if(!reds.isEmpty()) {
 			System.out.println("Captured Pieces");
-			System.out.print("RED [");
-			System.out.print(Arrays.toString(reds.toArray()));
-			System.out.println("]");
+			System.out.print("RED");
+			System.out.println(Arrays.toString(reds.toArray()));
 		}
 		
 		if(!blues.isEmpty()) {
-			System.out.print("BLUE [");
-			System.out.print(Arrays.toString(blues.toArray()));
-			System.out.println("]");
+			System.out.print("BLUE");
+			System.out.println(Arrays.toString(blues.toArray()));
 		}
 	}
 	

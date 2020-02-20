@@ -12,7 +12,6 @@ public class Pawn extends ChessPiece{
 	public Pawn(Board board, Color color , ChessMatch chessMatch) {
 		super(board, color);
 		this.chessMatch = chessMatch;
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -25,7 +24,7 @@ public class Pawn extends ChessPiece{
 		
 		if(getColor() == Color.RED) {
 			//Front
-			p.setValues(x + 1,y);
+			p.setValues(x + 1, y);
 			if(getBoard().positionExists(p) && !getBoard().thereIsAPiece(p)) {
 				moveMat[p.getRow()][p.getColumn()] = true;
 				
@@ -35,12 +34,12 @@ public class Pawn extends ChessPiece{
 			}
 			//Side 1
 			p.setValues(x + 1,y - 1);
-			if(isThereOpponentChessPiece(p) && getBoard().positionExists(p)) 
+			if(getBoard().positionExists(p) && isThereOpponentChessPiece(p)) 
 				moveMat[p.getRow()][p.getColumn()] = true;
 
 			//Side 2
 			p.setValues(x + 1,y + 1);
-			if(isThereOpponentChessPiece(p) && getBoard().positionExists(p)) 
+			if(getBoard().positionExists(p) && isThereOpponentChessPiece(p))
 				moveMat[p.getRow()][p.getColumn()] = true;
 			
 			//EnPassant
@@ -69,15 +68,15 @@ public class Pawn extends ChessPiece{
 			}
 			//Side 1
 			p.setValues(x - 1,y - 1);
-			if(isThereOpponentChessPiece(p) && getBoard().positionExists(p)) 
+			if(getBoard().positionExists(p) && isThereOpponentChessPiece(p)) 
 				moveMat[p.getRow()][p.getColumn()] = true;
 
 			//Side 2
 			p.setValues(x - 1,y + 1);
-			if(isThereOpponentChessPiece(p) && getBoard().positionExists(p)) 
+			if(getBoard().positionExists(p) && isThereOpponentChessPiece(p)) 
 				moveMat[p.getRow()][p.getColumn()] = true;
 			
-			//EnPassant
+			//EnPassan
 			p.setValues(x - 1, y - 1);
 			p2.setValues(x, y - 1);
 			if(getBoard().positionExists(p) && !getBoard().thereIsAPiece(p) && isThereOpponentChessPiece(p2) && (chessMatch.getEnPassantVulnerable() == (ChessPiece)getBoard().piece(p2))) {
