@@ -20,6 +20,7 @@ public class ChessMatch {
 	private Board board;
 	private List<ChessPiece> _capturedPieces = new ArrayList<>();
 	private List<ChessPiece> _piecesOnTheBoard = new ArrayList<>();
+	private ChessPiece enPassantVulnerable = null;
 	
 	private boolean check;
 	private boolean checkMate;
@@ -30,14 +31,6 @@ public class ChessMatch {
 		this.currentPlayer = Color.BLUE;
 		initialSetup();
 		
-	}
-	
-	public int getTurn() {
-		return turn;
-	}
-	
-	public Color getCurrentPlayer() {
-		return currentPlayer;
 	}
 	
 	public ChessPiece[][] getPieces(){
@@ -51,6 +44,34 @@ public class ChessMatch {
 		
 		return cp;
 	}
+	
+	public List<ChessPiece> getCapturedList(){
+		return _capturedPieces;
+	}
+	
+	public List<ChessPiece> getPiecesOnTheBoard(){
+		return _piecesOnTheBoard;
+	}
+	
+	public boolean getCheck() {
+		return check;
+	}
+	public boolean getCheckMate() {
+		return checkMate;
+	}
+	
+	public int getTurn() {
+		return turn;
+	}
+	
+	public Color getCurrentPlayer() {
+		return currentPlayer;
+	}
+	
+	public ChessPiece getEnPassantVulnerable() {
+		return enPassantVulnerable;
+	}
+	
 	
 	public ChessPiece performChessMove(ChessPosition originPos, ChessPosition targetPos) {
 		Position source = originPos.toPosition();	
@@ -69,6 +90,13 @@ public class ChessMatch {
 		
 		nextTurn();
 		
+		ChessPiece cp = (ChessPiece)board.piece(target);
+		
+		if(cp instanceof Pawn && (Math.abs(originPos.getRow() - targetPos.getRow())) == 2)
+			enPassantVulnerable = cp;
+		else
+			enPassantVulnerable = null;
+		
 		return(ChessPiece)capturedPiece;
 	}
 	
@@ -78,20 +106,6 @@ public class ChessMatch {
 		return board.piece(p).possibleMoves();
 	}
 	
-	public List<ChessPiece> getCapturedList(){
-		return _capturedPieces;
-	}
-	
-	public List<ChessPiece> getPiecesOnTheBoard(){
-		return _piecesOnTheBoard;
-	}
-	
-	public boolean getCheck() {
-		return check;
-	}
-	public boolean getCheckMate() {
-		return checkMate;
-	}
 	
 	private void placeNewPiece(char column, int row, ChessPiece piece) {
 		board.placePiece(piece, new ChessPosition(column,row).toPosition());
@@ -103,10 +117,7 @@ public class ChessMatch {
 		Piece capturedPiece = board.removePiece(target);
 		p.increaseMoveCount();
 		
-		if(capturedPiece != null) {
-			_piecesOnTheBoard.remove(capturedPiece);
-			_capturedPieces.add((ChessPiece)capturedPiece);
-		}
+		
 		
 		//Castling
 		if(p instanceof King) {
@@ -116,6 +127,22 @@ public class ChessMatch {
 				makeMove(new Position(src.getRow(),src.getColumn() - 4), new Position(src.getRow(), src.getColumn() - 1));
 		}
 		
+		//EnPassant
+		if(p instanceof Pawn && src.getColumn() != target.getColumn()) {
+			Position p2 = new Position(0,0);
+			
+			if(p.getColor() == Color.BLUE) 
+				p2.setValues(target.getRow() + 1, target.getColumn());
+			else 
+				p2.setValues(target.getRow() - 1, target.getColumn());
+			
+			capturedPiece = board.removePiece(p2);
+		}
+		
+		if(capturedPiece != null) {
+			_piecesOnTheBoard.remove(capturedPiece);
+			_capturedPieces.add((ChessPiece)capturedPiece);
+		}
 		
 		board.placePiece(p, target);
 		
@@ -127,11 +154,7 @@ public class ChessMatch {
 		board.placePiece(p, origin);
 		p.decreaseMoveCount();
 		
-		if(captured != null) {
-			board.placePiece(captured, target);
-			_capturedPieces.remove((ChessPiece)captured);
-			_piecesOnTheBoard.add((ChessPiece)captured);
-		}
+		
 		
 		if(p instanceof Rook) {
 			ChessPiece cp1 = (ChessPiece)board.piece(new Position(target.getRow(), target.getColumn() + 1));
@@ -140,6 +163,20 @@ public class ChessMatch {
 				undoMove(new Position(target.getRow(),target.getColumn() - 1), cp1.getChessPosition().toPosition(),null);
 			else if ( target.getColumn() == origin.getColumn() + 3 && cp2 instanceof King)
 				undoMove(new Position(target.getRow(),target.getColumn() + 1), cp1.getChessPosition().toPosition(),null);
+		}
+		
+		if(p instanceof Pawn && origin.getColumn() != target.getColumn() && (ChessPiece)captured == enPassantVulnerable ) {
+			if(p.getColor() == Color.BLUE)
+				target.setRow(target.getRow() + 1);
+			else
+				target.setRow(target.getRow() - 1);
+
+		}
+
+		if(captured != null) {
+			board.placePiece(captured, target);
+			_capturedPieces.remove((ChessPiece)captured);
+			_piecesOnTheBoard.add((ChessPiece)captured);
 		}
 		
 	}
@@ -217,7 +254,7 @@ public class ChessMatch {
 	private void initialSetup() {
 		
 		for(char i = 'a'; i < 'i' ; i++) 
-			placeNewPiece(i, 2, new Pawn(board,Color.BLUE));
+			placeNewPiece(i, 2, new Pawn(board,Color.BLUE,this));
 		placeNewPiece('a', 1, new Rook(board,Color.BLUE));
 		placeNewPiece('b', 1, new Knight(board,Color.BLUE));
 		placeNewPiece('c', 1, new Bishop(board,Color.BLUE));
@@ -228,7 +265,7 @@ public class ChessMatch {
 		placeNewPiece('h', 1, new Rook(board,Color.BLUE));
 		
 		for(char i = 'a'; i < 'i' ; i++) 
-			placeNewPiece(i, 7, new Pawn(board,Color.RED));
+			placeNewPiece(i, 7, new Pawn(board,Color.RED,this));
 		placeNewPiece('a', 8, new Rook(board,Color.RED));
 		placeNewPiece('b', 8, new Knight(board,Color.RED));
 		placeNewPiece('c', 8, new Bishop(board,Color.RED));
